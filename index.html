@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rick and Morty API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #character-info {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Buscar Personaje de Rick and Morty</h1>
+
+  <input type="text" id="character-name" placeholder="Escribe el nombre del personaje">
+  <button onclick="fetchCharacter()">Buscar</button>
+
+  <div id="character-info">
+   
+  </div>
+
+  <script>
+    async function fetchCharacter() {
+      const characterName = document.getElementById('character-name').value;
+      const characterInfo = document.getElementById('character-info');
+
+      try {
+        const response = await fetch(`http://localhost:3000/characters/${characterName}`);
+        const data = await response.json();
+
+        if (data.message) {
+          characterInfo.innerHTML = `<p>${data.message}</p>`;
+        } else {
+          characterInfo.innerHTML = `
+            <h3>${data.name}</h3>
+            <p><strong>Status:</strong> ${data.status}</p>
+            <p><strong>Species:</strong> ${data.species}</p>
+            <p><strong>Gender:</strong> ${data.gender}</p>
+            <p><strong>Origin:</strong> ${data.origin.name}</p>
+            <img src="${data.image}" alt="${data.name}" width="200">
+          `;
+        }
+      } catch (error) {
+        characterInfo.innerHTML = '<p>Error al obtener el personaje.</p>';
+      }
+    }
+  </script>
+
+</body>
+</html>
